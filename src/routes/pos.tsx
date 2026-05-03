@@ -52,9 +52,22 @@ function Terminal() {
 
   const checkout = () => {
     if (!cart.length) return toast.error("Cart is empty");
-    toast.success(`Sale completed · $${total.toFixed(2)} via ${method}`, { description: `Receipt TX-${Math.floor(Math.random() * 90000 + 10000)} sent.` });
+    const id = `TX-${Math.floor(Math.random() * 90000 + 10000)}`;
+    const data: ReceiptData = {
+      id,
+      time: new Date().toLocaleString(),
+      items: cart.map((i) => ({ name: i.name, qty: i.qty, price: i.price })),
+      subtotal,
+      tax,
+      total,
+      method,
+      cashier: "Amelia",
+    };
+    setReceipt(data);
+    toast.success(`Sale completed · $${total.toFixed(2)} via ${method}`, { description: `Receipt ${id} ready to print.` });
     setCart([]);
   };
+
 
   return (
     <Shell title="Terminal" subtitle="Scan, tap, charge.">
