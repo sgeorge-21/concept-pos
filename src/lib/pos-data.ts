@@ -55,3 +55,28 @@ export const outlets = [
   { id: "o3", name: "Airport Kiosk", revenue: 5340, orders: 167, status: "Open" },
   { id: "o4", name: "University Cafe", revenue: 7820, orders: 289, status: "Closed" },
 ];
+
+export type Role = "Owner" | "Manager" | "Cashier" | "Stockist";
+export type UserStatus = "Active" | "Invited" | "Suspended";
+export type User = {
+  id: string;
+  name: string;
+  email: string;
+  role: Role;
+  outlet: string;
+  status: UserStatus;
+  lastActive: string;
+  initials: string;
+  hue: number;
+};
+
+export const users: User[] = [
+  { id: "u1", name: "Amelia Hart", email: "amelia@smartpos.app", role: "Manager", outlet: "Downtown Flagship", status: "Active", lastActive: "Just now", initials: "AH", hue: 130 },
+  { id: "u2", name: "Noah Bennett", email: "noah@smartpos.app", role: "Cashier", outlet: "Downtown Flagship", status: "Active", lastActive: "3m ago", initials: "NB", hue: 200 },
+  { id: "u3", name: "Liam Carter", email: "liam@smartpos.app", role: "Cashier", outlet: "Harbor Market", status: "Active", lastActive: "12m ago", initials: "LC", hue: 25 },
+  { id: "u4", name: "Sofia Reyes", email: "sofia@smartpos.app", role: "Stockist", outlet: "Harbor Market", status: "Active", lastActive: "1h ago", initials: "SR", hue: 320 },
+  { id: "u5", name: "Mateo Diaz", email: "mateo@smartpos.app", role: "Cashier", outlet: "Airport Kiosk", status: "Suspended", lastActive: "2d ago", initials: "MD", hue: 0 },
+  { id: "u6", name: "Iris Park", email: "iris@smartpos.app", role: "Owner", outlet: "All outlets", status: "Active", lastActive: "Yesterday", initials: "IP", hue: 280 },
+  { id: "u7", name: "Jules Okafor", email: "jules@smartpos.app", role: "Cashier", outlet: "University Cafe", status: "Invited", lastActive: "—", initials: "JO", hue: 90 },
+];
+
