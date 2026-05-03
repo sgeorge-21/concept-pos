@@ -1,10 +1,12 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { Shell } from "@/components/pos/Shell";
 import { products, categories, type Product } from "@/lib/pos-data";
-import { useMemo, useState } from "react";
-import { Search, Trash2, Plus, Minus, CreditCard, Banknote, Smartphone, Receipt } from "lucide-react";
+import { useMemo, useRef, useState } from "react";
+import { Search, Trash2, Plus, Minus, CreditCard, Banknote, Smartphone, Receipt as ReceiptIcon, Printer, X } from "lucide-react";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
+import { Receipt, type ReceiptData } from "@/components/pos/Receipt";
+
 
 export const Route = createFileRoute("/pos")({
   component: Terminal,
