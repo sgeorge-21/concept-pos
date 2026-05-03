@@ -194,6 +194,37 @@ function Terminal() {
           </div>
         </aside>
       </div>
+
+      {receipt && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4 print:bg-transparent print:p-0 print:block">
+          <div className="relative bg-card border border-border rounded-2xl p-6 max-w-md w-full print:border-0 print:p-0 print:bg-transparent print:max-w-none" style={{ boxShadow: "var(--shadow-card)" }}>
+            <div className="flex items-center justify-between mb-4 print:hidden">
+              <h3 className="font-display text-xl font-bold">Receipt</h3>
+              <button onClick={() => setReceipt(null)} className="text-muted-foreground hover:text-foreground">
+                <X className="h-4 w-4" />
+              </button>
+            </div>
+            <div className="max-h-[60vh] overflow-y-auto rounded-lg print:max-h-none print:overflow-visible">
+              <Receipt ref={receiptRef} data={receipt} />
+            </div>
+            <div className="grid grid-cols-2 gap-2 mt-4 print:hidden">
+              <button
+                onClick={() => setReceipt(null)}
+                className="py-3 rounded-xl border border-border text-sm font-medium hover:bg-secondary"
+              >
+                Close
+              </button>
+              <button
+                onClick={printReceipt}
+                className="py-3 rounded-xl bg-primary text-primary-foreground text-sm font-display font-bold flex items-center justify-center gap-2 hover:opacity-90"
+              >
+                <Printer className="h-4 w-4" /> Print
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </Shell>
+
   );
 }
