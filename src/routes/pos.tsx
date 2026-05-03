@@ -1,10 +1,12 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { Shell } from "@/components/pos/Shell";
 import { products, categories, type Product } from "@/lib/pos-data";
-import { useMemo, useState } from "react";
-import { Search, Trash2, Plus, Minus, CreditCard, Banknote, Smartphone, Receipt } from "lucide-react";
+import { useMemo, useRef, useState } from "react";
+import { Search, Trash2, Plus, Minus, CreditCard, Banknote, Smartphone, Receipt as ReceiptIcon, Printer, X } from "lucide-react";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
+import { Receipt, type ReceiptData } from "@/components/pos/Receipt";
+
 
 export const Route = createFileRoute("/pos")({
   component: Terminal,
@@ -18,6 +20,11 @@ function Terminal() {
   const [cat, setCat] = useState<string>("All");
   const [cart, setCart] = useState<CartItem[]>([]);
   const [method, setMethod] = useState<"Cash" | "Card" | "Mobile">("Card");
+  const [receipt, setReceipt] = useState<ReceiptData | null>(null);
+  const receiptRef = useRef<HTMLDivElement>(null);
+
+  const printReceipt = () => window.print();
+
 
   const filtered = useMemo(() => {
     return products.filter((p) => {
@@ -45,9 +52,22 @@ function Terminal() {
 
   const checkout = () => {
     if (!cart.length) return toast.error("Cart is empty");
-    toast.success(`Sale completed · $${total.toFixed(2)} via ${method}`, { description: `Receipt TX-${Math.floor(Math.random() * 90000 + 10000)} sent.` });
+    const id = `TX-${Math.floor(Math.random() * 90000 + 10000)}`;
+    const data: ReceiptData = {
+      id,
+      time: new Date().toLocaleString(),
+      items: cart.map((i) => ({ name: i.name, qty: i.qty, price: i.price })),
+      subtotal,
+      tax,
+      total,
+      method,
+      cashier: "Amelia",
+    };
+    setReceipt(data);
+    toast.success(`Sale completed · $${total.toFixed(2)} via ${method}`, { description: `Receipt ${id} ready to print.` });
     setCart([]);
   };
+
 
   return (
     <Shell title="Terminal" subtitle="Scan, tap, charge.">
@@ -116,7 +136,7 @@ function Terminal() {
           <div className="flex-1 overflow-y-auto p-3 min-h-40">
             {cart.length === 0 ? (
               <div className="h-full flex flex-col items-center justify-center text-center text-muted-foreground p-8">
-                <Receipt className="h-10 w-10 mb-3 opacity-50" />
+                <ReceiptIcon className="h-10 w-10 mb-3 opacity-50" />
                 <div className="text-sm">Tap a product to start an order.</div>
               </div>
             ) : (
@@ -174,6 +194,37 @@ function Terminal() {
           </div>
         </aside>
       </div>
+
+      {receipt && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4 print:bg-transparent print:p-0 print:block">
+          <div className="relative bg-card border border-border rounded-2xl p-6 max-w-md w-full print:border-0 print:p-0 print:bg-transparent print:max-w-none" style={{ boxShadow: "var(--shadow-card)" }}>
+            <div className="flex items-center justify-between mb-4 print:hidden">
+              <h3 className="font-display text-xl font-bold">Receipt</h3>
+              <button onClick={() => setReceipt(null)} className="text-muted-foreground hover:text-foreground">
+                <X className="h-4 w-4" />
+              </button>
+            </div>
+            <div className="max-h-[60vh] overflow-y-auto rounded-lg print:max-h-none print:overflow-visible">
+              <Receipt ref={receiptRef} data={receipt} />
+            </div>
+            <div className="grid grid-cols-2 gap-2 mt-4 print:hidden">
+              <button
+                onClick={() => setReceipt(null)}
+                className="py-3 rounded-xl border border-border text-sm font-medium hover:bg-secondary"
+              >
+                Close
+              </button>
+              <button
+                onClick={printReceipt}
+                className="py-3 rounded-xl bg-primary text-primary-foreground text-sm font-display font-bold flex items-center justify-center gap-2 hover:opacity-90"
+              >
+                <Printer className="h-4 w-4" /> Print
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </Shell>
+
   );
 }
