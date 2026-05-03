@@ -118,7 +118,7 @@ function Terminal() {
           <div className="flex-1 overflow-y-auto p-3 min-h-40">
             {cart.length === 0 ? (
               <div className="h-full flex flex-col items-center justify-center text-center text-muted-foreground p-8">
-                <Receipt className="h-10 w-10 mb-3 opacity-50" />
+                <ReceiptIcon className="h-10 w-10 mb-3 opacity-50" />
                 <div className="text-sm">Tap a product to start an order.</div>
               </div>
             ) : (
