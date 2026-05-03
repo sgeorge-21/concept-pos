@@ -20,6 +20,11 @@ function Terminal() {
   const [cat, setCat] = useState<string>("All");
   const [cart, setCart] = useState<CartItem[]>([]);
   const [method, setMethod] = useState<"Cash" | "Card" | "Mobile">("Card");
+  const [receipt, setReceipt] = useState<ReceiptData | null>(null);
+  const receiptRef = useRef<HTMLDivElement>(null);
+
+  const printReceipt = () => window.print();
+
 
   const filtered = useMemo(() => {
     return products.filter((p) => {
